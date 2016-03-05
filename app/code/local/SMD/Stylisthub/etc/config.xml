@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<!--
+/**
+* SMD
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the EULA
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://www.magemobiledesign.com/LICENSE.txt
+*
+* ==============================================================
+*                 MAGENTO EDITION USAGE NOTICE
+* ==============================================================
+* This package designed for Magento COMMUNITY edition
+* SMD does not guarantee correct work of this extension
+* on any other Magento edition except Magento COMMUNITY edition.
+* SMD does not provide extension support in case of
+* incorrect edition usage.
+* ==============================================================
+*
+* @category    SMD
+* @package     SMD_Stylisthub
+* @version     1.2.3
+* @author      SMD Team <support@magemobiledesign.com>
+* @copyright   Copyright (c) 2014 SMD. (http://www.magemobiledesign.com)
+* @license     http://www.magemobiledesign.com/LICENSE.txt
+*
+*/
+-->
+<config>
+    <modules>
+        <SMD_Stylisthub>
+            <version>1.2.3</version>
+        </SMD_Stylisthub>
+    </modules>
+    <frontend>
+        <routers>
+            <stylisthub>
+                <use>standard</use>
+                <args>
+                    <module>SMD_Stylisthub</module>
+                    <frontName>stylisthub</frontName>
+                </args>
+            </stylisthub>
+        </routers>
+        <layout>
+            <updates>
+                <stylisthub>
+                    <file>stylisthub.xml</file>
+                </stylisthub>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+            <SMD_Stylisthub>
+                    <files>
+                        <default>SMD_Stylisthub.csv</default>
+                    </files>
+            </SMD_Stylisthub>
+            </modules>
+        </translate>
+    </frontend>
+    <global>
+        <helpers>
+            <stylisthub>
+                <class>SMD_Stylisthub_Helper</class>
+            </stylisthub>
+        </helpers>
+        <blocks>
+            <stylisthub>
+                <class>SMD_Stylisthub_Block</class>
+            </stylisthub>
+        </blocks>
+        <resources>
+            <stylisthub_setup>
+                <setup>
+                    <module>SMD_Stylisthub</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </stylisthub_setup>
+            <stylisthub_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </stylisthub_write>
+            <stylisthub_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </stylisthub_read>
+        </resources>
+        <models>
+            <stylisthub>
+                <class>SMD_Stylisthub_Model</class>
+                <resourceModel>stylisthub_mysql4</resourceModel>
+            </stylisthub>
+            <stylisthub_mysql4>
+                <class>SMD_Stylisthub_Model_Mysql4</class>
+                <entities>
+                    <stylisthub>
+                        <table>stylisthub</table>
+                    </stylisthub>
+                    <stylistprofile>
+                        <table>stylisthub_stylistprofile</table>
+                    </stylistprofile>
+                    <commission>
+                        <table>stylisthub_commission</table>
+                    </commission>
+                    <transaction>
+                        <table>stylisthub_transaction</table>
+                    </transaction>
+                     <stylistreview>
+                        <table>stylisthub_stylistreview</table>
+                    </stylistreview>
+                     <vacationmode>
+                        <table>stylisthub_vacationmode</table>
+                    </vacationmode>
+                </entities>
+            </stylisthub_mysql4>
+        </models>
+        <events>
+            <checkout_onepage_controller_success_action>
+                <observers>
+                    <stylisthub>
+                        <type>singleton</type>
+                        <class>stylisthub/observer</class>
+                        <method>successAfter</method>
+                    </stylisthub>
+                </observers>
+            </checkout_onepage_controller_success_action>
+
+            <controller_action_postdispatch_adminhtml_sales_order_view>
+                <observers>
+                    <stylisthub>
+                        <type>singleton</type>
+                        <class>stylisthub/observer</class>
+                        <method>salesOrderAfter</method>
+                    </stylisthub>
+                </observers>
+            </controller_action_postdispatch_adminhtml_sales_order_view>
+            <sales_order_creditmemo_save_after>
+                <observers>
+                    <stylisthub>
+                        <type>singleton</type>
+                        <class>stylisthub/observer</class>
+                        <method>creditMemoEvent</method>
+                    </stylisthub>
+                </observers>
+            </sales_order_creditmemo_save_after>
+            <catalog_product_prepare_save>
+                <observers>
+                    <stylisthub>
+                        <type>singleton</type>
+                        <class>stylisthub/observer</class>
+                        <method>productEditAction</method>
+                    </stylisthub>
+                </observers>
+            </catalog_product_prepare_save>
+            <catalog_product_attribute_update_before>
+                <observers>
+                    <stylisthub>
+                        <type>singleton</type>
+                        <class>stylisthub/observer</class>
+                        <method>productMassEditAction</method>
+                    </stylisthub>
+                </observers>
+            </catalog_product_attribute_update_before>
+             <order_cancel_after>
+                <observers>
+                    <stylisthub>
+                        <type>singleton</type>
+                        <class>stylisthub/observer</class>
+                        <method>cancelOrderEmail</method>
+                    </stylisthub>
+                </observers>
+            </order_cancel_after>
+        </events>
+        <template>
+            <email>
+                <stylisthub_admin_approval_stylist_registration_new_stylist_template translate="label" module="stylisthub">
+                    <label>New Stylist Registration Notification</label>
+                    <file>stylisthub/new_registration_stylist.html</file>
+                    <type>html</type>
+                </stylisthub_admin_approval_stylist_registration_new_stylist_template>
+                <stylisthub_admin_approval_stylist_registration_email_template_selection translate="label" module="stylisthub">
+                    <label>Stylist Registration Notification</label>
+                    <file>stylisthub/stylist_new.html</file>
+                    <type>html</type>
+                </stylisthub_admin_approval_stylist_registration_email_template_selection>
+                <stylisthub_admin_approval_stylist_registration_stylist_email_template_selection translate="label" module="stylisthub">
+                    <label>Admin Approval Notification</label>
+                    <file>stylisthub/stylist_admin_approval.html</file>
+                    <type>html</type>
+                </stylisthub_admin_approval_stylist_registration_stylist_email_template_selection>
+                <stylisthub_admin_approval_stylist_registration_stylist_email_template_disapprove translate="label" module="stylisthub">
+                    <label>Admin Disapproval Notification</label>
+                    <file>stylisthub/stylist_admin_not_approve.html</file>
+                    <type>html</type>
+                </stylisthub_admin_approval_stylist_registration_stylist_email_template_disapprove>
+                <stylisthub_product_addproductemailnotificationtemplate translate="label" module="stylisthub">
+                    <label>New Product Added Notification</label>
+                    <file>stylisthub/new_product_notification.html</file>
+                    <type>html</type>
+                </stylisthub_product_addproductemailnotificationtemplate>
+                <stylisthub_product_addproductapprovalemailnotificationtemplate translate="label" module="stylisthub">
+                    <label>New Product Approval Notification</label>
+                    <file>stylisthub/new_product_approval_notification.html</file>
+                    <type>html</type>
+                </stylisthub_product_addproductapprovalemailnotificationtemplate>
+                  <stylisthub_product_addproductenabledemailnotificationtemplate translate="label" module="stylisthub">
+                    <label>Product Enabled Notification</label>
+                    <file>stylisthub/product_status_enabled.html</file>
+                    <type>html</type>
+                </stylisthub_product_addproductenabledemailnotificationtemplate>
+                  <stylisthub_product_addproductdisabledemailnotificationtemplate translate="label" module="stylisthub">
+                    <label>Product Disabled Notification</label>
+                    <file>stylisthub/product_status_disabled.html</file>
+                    <type>html</type>
+                </stylisthub_product_addproductdisabledemailnotificationtemplate>
+                 <stylisthub_stylist_review_admin_notify_review translate="label" module="stylisthub">
+                    <label>New Review Notification</label>
+                    <file>stylisthub/new_review.html</file>
+                    <type>html</type>
+                </stylisthub_stylist_review_admin_notify_review>
+                <stylisthub_stylist_review_approve_review translate="label" module="stylisthub">
+                    <label>Review Approval Notification</label>
+                    <file>stylisthub/review_approval.html</file>
+                    <type>html</type>
+                </stylisthub_stylist_review_approve_review>
+                 <stylisthub_admin_approval_stylist_registration_contact_email_template_selection translate="label" module="stylisthub">
+                    <label>Contact Admin</label>
+                    <file>stylisthub/stylist_admin_contact_form.html</file>
+                    <type>html</type>
+                </stylisthub_admin_approval_stylist_registration_contact_email_template_selection>
+                <stylisthub_admin_approval_stylist_registration_sales_notification_template_selection translate="label" module="stylisthub">
+                    <label>Sales Notification</label>
+                    <file>stylisthub/stylisthub_sales_notification.html</file>
+                    <type>html</type>
+                </stylisthub_admin_approval_stylist_registration_sales_notification_template_selection>
+                <stylisthub_admin_approval_stylist_registration_cancel_notification_template_selection translate="label" module="stylisthub">
+                    <label>Cancel Order Notification</label>
+                    <file>stylisthub/stylisthub_cancel_notification.html</file>
+                    <type>html</type>
+                </stylisthub_admin_approval_stylist_registration_cancel_notification_template_selection>
+            </email>
+        </template>
+    </global>
+    <admin>
+        <routers>
+            <stylisthubadmin>
+                <use>admin</use>
+                <args>
+                    <module>SMD_Stylisthub</module>
+                    <frontName>stylisthubadmin</frontName>
+                </args>
+            </stylisthubadmin>
+        </routers>
+
+    </admin>
+    <adminhtml>
+        <menu>
+            <stylisthub module="stylisthub">
+                <title>Stylisthub</title>
+                <sort_order>100</sort_order>
+                <children>
+                    <managestylist module="stylisthub">
+                        <title>Manage Stylists</title>
+                        <sort_order>1</sort_order>
+                        <action>stylisthubadmin/adminhtml_managestylist</action>
+                    </managestylist>
+                    <order module="stylisthub">
+                        <title>Orders</title>
+                        <sort_order>2</sort_order>
+                        <action>stylisthubadmin/adminhtml_orderview</action>
+                    </order>
+                    <commission module="stylisthub">
+                        <title>Payments</title>
+                        <sort_order>3</sort_order>
+                        <action>stylisthubadmin/adminhtml_commission</action>
+                    </commission>
+                    <manage_products module="stylisthub">
+                        <title>Products</title>
+                        <sort_order>4</sort_order>
+                        <action>stylisthubadmin/adminhtml_products/</action>
+                    </manage_products>
+                     <stylistreview module="stylisthub">
+                        <title>Reviews and Ratings</title>
+                        <sort_order>5</sort_order>
+                        <action>stylisthubadmin/adminhtml_stylistreview</action>
+                    </stylistreview>
+                    <configuration module="stylisthub">
+                        <title>Configuration</title>
+                        <sort_order>6</sort_order>
+                        <action>adminhtml/system_config/edit/section/stylisthub</action>
+                    </configuration>
+                </children>
+            </stylisthub>
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <stylisthub translate="title" module="stylisthub">
+                            <title>Stylisthub</title>
+                            <sort_order>1000</sort_order>
+                            <children>
+                                <stylisthubbackend translate="title">
+                                    <title>Market</title>
+                                </stylisthubbackend>
+                            </children>
+                        </stylisthub>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <stylisthub>
+                    <file>stylisthub.xml</file>
+                </stylisthub>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+            <SMD_Stylisthub>
+                    <files>
+                        <default>SMD_Stylisthub.csv</default>
+                    </files>
+            </SMD_Stylisthub>
+            </modules>
+        </translate>
+    </adminhtml>
+    <crontab>
+    <jobs>
+        <cronjob_vacationmode>
+            <schedule><cron_expr>* * */1 * *</cron_expr></schedule>
+            <run><model>stylisthub/observer::eventVacationMode</model></run>
+        </cronjob_vacationmode>
+    </jobs>
+</crontab>
+</config>

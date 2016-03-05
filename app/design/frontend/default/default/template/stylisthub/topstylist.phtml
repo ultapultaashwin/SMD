@@ -1,0 +1,78 @@
+<?php
+/**
+ * SMD
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magemobiledesign.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * SMD does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * SMD does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    SMD
+ * @package     SMD_Stylisthub
+ * @version     1.2.3
+ * @author      SMD Team <support@magemobiledesign.com>
+ * @copyright   Copyright (c) 2014 SMD. (http://www.magemobiledesign.com)
+ * @license     http://www.magemobiledesign.com/LICENSE.txt
+ * 
+ */
+?>
+<?php 
+
+ $model = Mage::getModel('customer/customer')->getCollection()->addAttributeToFilter('customerstatus',1);       
+    $id = array();
+       if ($model->getSize() > 0) {
+           foreach ($model as $_model) {
+               $id[]   = $_model['entity_id'];              
+           }                 
+   $collection = Mage::getModel('stylisthub/stylistprofile')->topStylist($id); 
+   $count = count($collection);
+   if($count>0){
+?>
+<div class="home_stylists_logo">
+    <h2 class="home_pdt_name"><span><?php echo $this->__('Top Stylists'); ?></span></h2>
+    <div class="stylists_logo_container">
+        <?php
+              
+        $increment = 1;
+        foreach($collection as $_collection){
+                    $stylist_id  = $_collection['stylist_id'];
+                    $target_path        = 'stylisthub/stylist/displaystylist/id/' . $stylist_id;
+                    $mainUrlRewrite     = Mage::getModel('core/url_rewrite')->load($target_path, 'target_path');
+                    $getRequestPath     = $mainUrlRewrite->getRequestPath();
+                    $get_requestPath    = Mage::getUrl($getRequestPath);
+            if($_collection['store_title']!=''){
+                    if (strpos($_collection['store_logo'], '.') && $increment<=8) {
+                
+                ?>
+                <a href="<?php echo $get_requestPath; ?>" title="<?php echo $_collection['store_title']; ?>">
+                    <img alt="" src="<?php echo Mage::getBaseUrl('media') . "stylisthub/resized/" . $_collection['store_logo']; ?>" /> 
+                </a>
+            <?php          
+                 } elseif($increment<=8) {  ?>
+                        <a  href="<?php echo $get_requestPath; ?>" title="<?php echo $_collection['store_title']; ?>">
+                            <img alt="" src="<?php echo Mage::getBaseUrl('skin') . "frontend/default/market_place/stylisthub/images/image.jpg"; ?>"/> 
+                           
+                        </a> 
+           <?php }           
+            $increment++;
+        }
+        }
+        ?>
+    </div>
+</div>
+ <?php }
+   }  
+    
+?>

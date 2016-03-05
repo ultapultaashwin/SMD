@@ -1,0 +1,395 @@
+<?php
+/**
+ * SMD
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magemobiledesign.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * SMD does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * SMD does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    SMD
+ * @package     SMD_Stylisthub
+ * @version     1.2.3
+ * @author      SMD Team <support@magemobiledesign.com>
+ * @copyright   Copyright (c) 2014 SMD. (http://www.magemobiledesign.com)
+ * @license     http://www.magemobiledesign.com/LICENSE.txt
+ * 
+ */
+/**
+ * Seler Dashboard file is used to display Total sales, Average orders, Last five orders, Most Viewed Products
+ * and a graph that shows the sales report for that particular stylist
+ */
+if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+    $groupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+    $stylisthub_groupId = Mage::helper('stylisthub')->getGroupId();
+    if ($groupId == $stylisthub_groupId) {
+        $id = Mage::getSingleton('customer/session')->getId();
+        $user = $this->__('Welcome, %s!', Mage::getSingleton('customer/session')->getCustomer()->getName());
+        ?>
+        <div class="page-title">
+            <h1 class="manage_products_head"><?php echo $this->__('Stylist Dashboard'); ?></h1>
+            <span class="mp_top_amount"><?php echo $user; ?></span>
+        </div>
+        <?php
+        /**
+         * To display Life time sales
+         */
+        $stylistProduct = Mage::getModel('stylisthub/stylistprofile')->stylistProduct($id);
+        $lifetimeSales = array();
+        $orderIds = array();
+        $productIds = array();
+        $averageOrders = '';
+        foreach ($stylistProduct as $_stylistProduct) {
+            $lifetimeSales[] = $_stylistProduct['stylist_amount'];
+            $orderIds[] = $_stylistProduct['order_id'];
+            $productIds[] = $_stylistProduct['product_id'];
+        }
+        $totalSum = array_sum($lifetimeSales);
+        $orderSum = count($orderIds);
+        if (!empty($orderSum)) {
+            $averageOrders = $totalSum / $orderSum;
+        }
+        ?>
+        <div class="mp_dashboard_lifetime">
+            <h3><?php echo $this->__('Life Time Sales'); ?></h3>
+            <p><?php echo Mage::helper('core')->currency($totalSum, true, false); ?></p>
+        </div>    
+        <?php
+        /**
+         *  To display Average sales      
+         */?>
+        <div class = "mp_dashboard_average">
+        <h3><?php echo $this->__('Average Orders');
+        ?></h3>
+        <p><?php echo Mage::helper('core')->currency($averageOrders, true, false); ?></p></div>
+        <div class="page-title">
+            <h3><?php echo $this->__('Last Five Orders'); ?></h3>
+        </div>
+        <div class="mp_dashboard_container data-table">    
+            <?php
+            /**
+             *  To display Last Five Orders      
+             */
+
+            $dataProduct = Mage::getModel('stylisthub/stylistprofile')->getdataProduct($orderIds);
+            $size = count($dataProduct);
+            ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th><?php echo $this->__('Order Id'); ?></th>
+                        <th><?php echo $this->__('Product Name'); ?></th>
+                        <th><?php echo $this->__('Price'); ?></th>
+                        <th class="no-border-right"><?php echo $this->__('Quantity'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($size > 0) {
+                        foreach ($dataProduct as $_dataproduct) {
+                            if (in_array($_dataproduct['product_id'], $productIds)) {
+                                ?>                
+                                <tr>
+                                    <td><?php echo $_dataproduct['increment_id']; ?></td>
+                                    <td><?php echo $_dataproduct['name']; ?></td>
+                                    <td><?php echo Mage::helper('core')->currency($_dataproduct['base_price'], true, false); ?></td>
+                                    <td><?php echo round($_dataproduct['qty_invoiced']); ?></td>
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
+                    </tbody>
+        <?php } else { ?>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="a-center no_product_content"><?php echo $this->__('There is no orders to view'); ?></td>
+                        </tr>
+                    </tfoot>
+        <?php } ?>              
+
+            </table>
+        </div>
+        <?php
+/**
+ *  To display Most viewed Products 
+ */
+        $currentDate = Mage::getModel('core/date')->date('Y-m-d');
+        ?>
+        <div class="page-title">
+            <h3><?php echo $this->__('Most Viewed Products'); ?></h3>
+        </div>
+        <div class="mp_dashboard_container data-table mp_dashboard_container_viewed">
+            <?php  $mostViewed = $this->mostViewed(); ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th><?php echo $this->__('Product Name'); ?></th>
+                        <th><?php echo $this->__('Price'); ?></th>
+                        <th class="no-border-right"><?php echo $this->__('No of Views'); ?></th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    <?php 
+                    	$mostViewedProductIds = array();
+                        foreach ($mostViewed as $_mostViewed) {
+                            /**
+                             * Deal Expire date
+                             */
+							
+                            if ($_mostViewed['stylist_id'] == $id) {
+								$mostViewedProductIds = $_mostViewed['entity_id'];
+                                $dealExpireDate = $_mostViewed['special_to_date'];
+                                ?>
+                                <tr>
+                                    <td><?php echo $_mostViewed['id'].$_mostViewed['name']; ?> </td>
+                                    <td><?php
+                                        if (!empty($_mostViewed['price']) && ($dealExpireDate != '') && ($dealExpireDate >= $currentDate)) {
+                                            echo Mage::helper('core')->currency($_mostViewed['special_price'], true, false);
+                                        } else {
+                                            echo Mage::helper('core')->currency($_mostViewed['price'], true, false);
+                                        }
+                                        ?>
+                                    </td>
+                                    <td width="20%"><?php echo $_mostViewed['views']; ?> </td>
+                                </tr>     
+                        <?php }
+                    }
+                    ?>
+                    </tbody>               
+        <?php if(empty($mostViewedProductIds))  { ?>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="a-center no_product_content"><?php echo $this->__('There is no recent views'); ?></td>
+                        </tr>
+                    </tfoot>
+        <?php  } ?>
+            </table>
+        </div>
+        <div class="page-title">
+            <h3><?php echo $this->__('Sales Report'); ?></h3>
+        </div>
+        <?php
+        $selectFilter = $data = $from = $to = '';
+        $data = $this->getRequest()->getPost();
+        if (isset($data['select_filter'])) {
+            $selectFilter = $data['select_filter'];
+        }
+        switch ($selectFilter) {
+            case "today":
+                /**
+                 *  today interval
+                 */
+                $startDay = strtotime("-1 today midnight");
+                $fromDisplay = date("Y-m-d", $startDay);
+                $toDisplay = date("Y-m-d", $startDay);
+                break;
+            case "lastweek":
+                /**
+                 *  last week interval
+                 */
+                $to = date('d-m-Y');
+                $toDay = date('l', strtotime($to));
+                /**
+                 *  if today is monday, take last monday
+                 */
+                if ($toDay == 'Monday') {
+                    $startDay = strtotime("-1 monday midnight");
+                    $endDay = strtotime("yesterday");
+                } else {
+                    $startDay = strtotime("-2 monday midnight");
+                    $endDay = strtotime("-1 sunday midnight");
+                }
+                $from = date("Y-m-d", $startDay);
+                $to = date("Y-m-d", $endDay);
+                $to = date('Y-m-d', strtotime($to . ' + 1 day'));
+                $fromDisplay = $from;
+                $toDisplay = date("Y-m-d", $endDay);
+                break;
+            case "lastmonth":
+                /**
+                 *  last month interval
+                 */
+                $from = date('Y-m-01', strtotime('last month'));
+                $to = date('Y-m-t', strtotime('last month'));
+                $to = date('Y-m-d', strtotime($to . ' + 1 day'));
+                $fromDisplay = $from;
+                $toDisplay = date('Y-m-t', strtotime('last month'));
+                break;
+            case "custom":
+                /**
+                 *  last custom interval
+                 */
+                $from = date('Y-m-d', strtotime($data['date_from']));
+                $to = date('Y-m-d', strtotime($data['date_to'] . ' + 1 day'));
+                $fromDisplay = $from;
+                $toDisplay = date('Y-m-d', strtotime($data['date_to']));
+                break;
+            /**
+             *  Convert local date to magento db date.
+             */
+        }
+
+        if ($selectFilter == '') {
+            $from = date('Y-m-01', strtotime('last month'));
+            $to = date('Y-m-t', strtotime('last month'));
+            $to = date('Y-m-d', strtotime($to . ' + 1 day'));
+            $dbFrom = $from;
+            $dbTo = date('Y-m-t', strtotime('last month'));
+        } else {
+            $dbFrom = Mage::getModel('core/date')->gmtDate(null, strtotime($from));
+            $dbTo = Mage::getModel('core/date')->gmtDate(null, strtotime($to));
+        }
+        ?>
+        <form class="mp_stylist_sales_report" name="orders" method="post" action="">
+            <select name="select_filter" id="select_filter">
+                <option name="lastmonth" value="lastmonth"  <?php if ($selectFilter == 'lastmonth') { ?> selected="selected" <?php } ?>><?php echo $this->__('Last Month'); ?></option>
+                <option name="lastweek" value="lastweek"  <?php if ($selectFilter == 'lastweek') { ?> selected="selected" <?php } ?>><?php echo $this->__('Last Week'); ?></option>
+                <option name="custom" value="custom" <?php if ($selectFilter == 'custom') { ?> selected="selected" <?php } ?>><?php echo $this->__('Custom'); ?></option>
+                <option name="today" value="today" <?php if ($selectFilter == 'today') { ?> selected="selected" <?php } ?>><?php echo $this->__('Today'); ?></option>
+            </select>
+            <input type="text" name="date_from" class="txtbox" id="date_from" value="<?php
+            if ($selectFilter == '') {
+                echo date('m/d/Y', strtotime($dbFrom));
+            } else {
+                echo date('m/d/Y', strtotime($fromDisplay));
+            }
+            ?>" />
+            <input type="text" name="date_to" class="txtbox" id="date_to" value="<?php
+            if ($selectFilter == '') {
+                echo date('m/d/Y', strtotime($dbTo));
+            } else {
+                echo date('m/d/Y', strtotime($toDisplay));
+            }
+            ?>" />
+            <button type="submit" class="button"  title="<?php echo $this->__('Submit') ?>" name="filter_submit" id="multi_submit" ><span><span><?php echo $this->__('Submit') ?></span></span></button>
+        </form>
+        <?php
+        $id = Mage::getSingleton('customer/session')->getId();
+        if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+            $groupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+            $stylisthub_groupId = Mage::helper('stylisthub')->getGroupId();
+            if ($groupId == $stylisthub_groupId) {
+                $revenue = array();
+                $stylistProductCollection = $this->advancedSalesReportCollection($dbFrom, $dbTo, $id);
+                foreach ($stylistProductCollection as $_stylistProductCollection) {
+                    $dateRevenue = Mage::getModel('core/date')->date(null, strtotime($_stylistProductCollection['created_at']));
+                    $dateRevenue = date('F j, Y', strtotime($dateRevenue));
+                    if (array_key_exists($dateRevenue, $revenue)) {
+                        $revenue[$dateRevenue] = $revenue[$dateRevenue] + $_stylistProductCollection['stylist_amount'];
+                    } else {
+                        $revenue[$dateRevenue] = $_stylistProductCollection['stylist_amount'];
+                    }
+                }
+                /**
+                 *  Calculating all days between from and to dates
+                 */
+                $salesAllDays = array();
+                $fromAllDays = strtotime($from);
+                $toAllDays = strtotime($to);
+                for ($currentSalesDay = $fromAllDays; $currentSalesDay < $toAllDays; $currentSalesDay += (60 * 60 * 24)) {
+                    $currentDayString = date('F j, Y', $currentSalesDay);
+                    $salesAllDays[$currentDayString] = 0;
+                }
+                $totalRevenue = array_sum($revenue);
+                /**
+                 *  Assinging value to all days
+                 */
+                foreach ($revenue as $key => $value) {
+                    $salesAllDays[$key] = $value;
+                }
+                $revenueDayData = '';
+                foreach ($salesAllDays as $key => $value) {
+                    $keyValue = date('M j, Y', strtotime($key));
+                    $toolData = date('l, F j, Y', strtotime($key)) . ' ' . $this->__('Sales') . ' : ' . Mage::helper('core')->currency(round($value, 2), true, false);
+                    $revenueDayData.="data.addRow(['{$keyValue}', {$value}, '{$toolData}']);";
+                }
+            }
+        }
+        ?>
+        <div id="chart_div" style="width: 780px; height: 500px; margin:15px 0;"></div>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            google.load("visualization", "1", {packages: ["corechart"]});
+            google.setOnLoadCallback(drawChart);
+            function drawChart() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', '<?php echo $this->__("Date"); ?>');
+                data.addColumn('number', '<?php echo $this->__("Sales"); ?>');
+                data.addColumn({type: 'string', role: 'tooltip'});
+        <?php echo $revenueDayData; ?>
+                var formatter = new google.visualization.NumberFormat({prefix: '$'});
+                formatter.format(data, 1);
+                var options = {pieSliceText: 'value'};
+                var options = {
+                    width: 700, height: 250,
+                    colors: ['#009900', '#e6f4fa'],
+                    areaOpacity: 0.1,
+                    vAxis: {format: '<?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getBaseCurrencyCode())->getSymbol(); ?>###,###,###.00', textPosition: 'in', showTextEvery: 5, slantedText: false, textStyle: {color: '#000000', fontSize: 11}},
+                    hAxis: {title: '<?php
+        if ($selectFilter == '') {
+            echo 'Last Month';
+        } else {
+            echo ucfirst($selectFilter);
+        }
+        ?>', titleTextStyle: {color: '#000000', fontSize: 12, italic: false, bold: true}, textPosition: 'out', showTextEvery: 1, slantedText: false, textStyle: {color: '#000000', fontSize: 10}},
+                    pointSize: 5,
+                    legend: 'top',
+                    chartArea: {left: 20, top: 30, width: "100%", height: "75%"},
+                    tooltip: {isHtml: true}
+                };
+                var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
+            }
+        </script>
+        <script type="text/javascript">
+            decorateTable('my-product-table');
+            // <![CDATA[
+            Calendar.setup({
+                inputField: 'date_from',
+                ifFormat: '%m/%e/%y',
+                button: 'special_from_date_trig',
+                align: 'Bl',
+                singleClick: true
+            });
+
+            Calendar.setup({
+                inputField: 'date_to',
+                ifFormat: '%m/%e/%y',
+                button: 'special_to_date_trig',
+                align: 'Bl',
+                singleClick: true
+            });
+            // ]]>
+            var select = $("select_filter").getValue();
+            console.log(select);
+            $('select_filter').onsubmit = function() {
+                if (select === 'custom') {
+
+                    $('date_from').remove();
+                    $('date_to').remove();
+                }
+                else
+                {
+
+                    $('date_from').add();
+                    $('date_to').add();
+                }
+            };
+        </script>
+    <?php
+    }
+}
+?>

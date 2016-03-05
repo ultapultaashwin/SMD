@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<stylisthubadmin_adminhtml_managestylist_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Manage Stylist</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="stylisthub/adminhtml_managestylist" name="managestylist" />
+		</reference>
+	</stylisthubadmin_adminhtml_managestylist_index>
+	<stylisthubadmin_adminhtml_order_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Orders</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="stylisthub/adminhtml_order" name="order" />
+		</reference>
+	</stylisthubadmin_adminhtml_order_index>
+	<stylisthubadmin_adminhtml_orderview_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>View Order Details</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="stylisthub/adminhtml_orderview" name="orderview" />
+		</reference>
+	</stylisthubadmin_adminhtml_orderview_index>
+	<stylisthubadmin_adminhtml_commission_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Commission</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="stylisthub/adminhtml_commission" name="order" />
+		</reference>
+	</stylisthubadmin_adminhtml_commission_index>
+	<stylisthubadmin_adminhtml_paymentinfo_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Payment Details</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="stylisthub/adminhtml_Paymentinfo" name="paymentinfo" />
+		</reference>
+	</stylisthubadmin_adminhtml_paymentinfo_index>
+	<stylisthubadmin_adminhtml_products_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Products</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="stylisthub/adminhtml_products" name="products" />
+		</reference>
+	</stylisthubadmin_adminhtml_products_index>
+	<stylisthubadmin_adminhtml_stylistreview_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Reviews and Ratings</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="stylisthub/adminhtml_stylistreview" name="stylistreview" />
+		</reference>
+	</stylisthubadmin_adminhtml_stylistreview_index>
+	<stylisthubadmin_adminhtml_commission_addcomment>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Manage Stylist</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="stylisthub/adminhtml_commission_edit" name="add_comment" />
+		</reference>
+	</stylisthubadmin_adminhtml_commission_addcomment>
+	<stylisthubadmin_adminhtml_managestylist_setcommission>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Manage Stylist</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="stylisthub/adminhtml_managestylist_edit" name="set_commission" />
+		</reference>
+	</stylisthubadmin_adminhtml_managestylist_setcommission>
+</layout>

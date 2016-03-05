@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+/**
+* SMD
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the EULA
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://www.magemobiledesign.com/LICENSE.txt
+*
+* ==============================================================
+*                 MAGENTO EDITION USAGE NOTICE
+* ==============================================================
+* This package designed for Magento COMMUNITY edition
+* SMD does not guarantee correct work of this extension
+* on any other Magento edition except Magento COMMUNITY edition.
+* SMD does not provide extension support in case of
+* incorrect edition usage.
+* ==============================================================
+*
+* @category    SMD
+* @package     SMD_Stylisthub
+* @version     1.2.3
+* @author      SMD Team <support@magemobiledesign.com>
+* @copyright   Copyright (c) 2014 SMD. (http://www.magemobiledesign.com)
+* @license     http://www.magemobiledesign.com/LICENSE.txt
+*
+*/
+-->
+<config>
+   <acl>
+    <resources>
+        <all>
+        <title>Allow Everything</title>
+        </all>
+        <admin>
+            <children>
+                <system>
+                    <children>
+                        <config>
+                            <children>
+                                <stylisthub translate="title" module="stylisthub">
+                                    <title>Stylisthub Section</title>
+                                </stylisthub>
+                            </children>
+                        </config>
+                    </children>
+                </system>
+                <stylisthub module="stylisthub">
+                <title>stylisthub</title>
+                <children>
+                    <managestylist module="stylisthub">
+                        <title>Manage Stylists</title>
+                    </managestylist>
+                    <order module="stylisthub">
+                        <title>Stylist Orders</title>
+                    </order>
+                    <commission module="stylisthub">
+                        <title>Commission detail</title>
+                    </commission>
+                    <manage_products module="stylisthub">
+                        <title>Stylist Products</title>
+                    </manage_products>
+                    <stylistreview module="stylisthub">
+                        <title>Review and Ratings</title>
+                    </stylistreview>
+                    <configuration module="stylisthub">
+                        <title>Configuration</title>
+                    </configuration>
+                </children>
+            </stylisthub>
+           </children>
+       </admin>
+   </resources>
+</acl>
+</config>

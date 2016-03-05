@@ -1,0 +1,726 @@
+<?xml version="1.0"?>   
+<!--
+/**
+* SMD
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the EULA
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://www.magemobiledesign.com/LICENSE.txt
+*
+* ==============================================================
+*                 MAGENTO EDITION USAGE NOTICE
+* ==============================================================
+* This package designed for Magento COMMUNITY edition
+* SMD does not guarantee correct work of this extension
+* on any other Magento edition except Magento COMMUNITY edition.
+* SMD does not provide extension support in case of
+* incorrect edition usage.
+* ==============================================================
+*
+* @category    SMD
+* @package     SMD
+* @version     1.2.3
+* @author      SMD Team <support@magemobiledesign.com>
+* @copyright   Copyright (c) 2014 SMD. (http://www.magemobiledesign.com)
+* @license     http://www.magemobiledesign.com/LICENSE.txt
+* 
+*/
+-->
+<layout version="1.0.0">
+    <default>        
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>
+        </reference>  
+	 </default>
+	 
+	 <customer_logged_out>
+	<reference name="root">
+        <reference name="top.links">
+            <action method="addLink" translate="label title">
+                <label>Register as stylist</label>
+                <url>/stylisthub/stylist/create</url>
+                <title>Register as stylist</title>
+                <prepare/>
+                <urlParams/>
+                <position>101</position>
+            </action>
+			 <action method="addLink" translate="label title">
+                <label>Stylist Login</label>
+                <url>/stylisthub/stylist/login</url>
+                <title>Stylist Login</title>
+                <prepare/>
+                <urlParams/>
+                <position>102</position>
+            </action>
+			 <action method="addLink" translate="label title">
+                <label>Our Stylists</label>
+                <url>/stylisthub/stylist/allstylist</url>
+                <title>Our Stylists</title>
+                <prepare/>
+                <urlParams/>
+                <position>103</position>
+            </action>
+        </reference>
+        </reference>
+ </customer_logged_out>
+ 
+ <customer_logged_in>
+ <reference name="root">  
+ <reference name="top.links">
+ <action method="addLink" translate="label title">
+                <label>Stylist Dashboard</label>
+                <url>stylisthub/stylist/dashboard</url>
+                <title>Stylist Dashboard</title>
+                <prepare/>
+                <urlParams/>
+                <position>103</position>
+            </action>
+ </reference></reference>
+ </customer_logged_in>      
+
+	 
+    <!--  Stylist My Account Links  -->
+    <customer_account translate="label">
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>        
+        <reference name="left">            
+            <remove name="left.permanent.callout" />
+            <remove name="catalog.compare.sidebar" />
+            <remove name="cart_sidebar" />            
+            <remove name="sale.reorder.sidebar" />           
+            <block type="stylisthub/stylisthub" name="stylisthub_page_left" before='-'>
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/page/left.phtml</template>
+                </action>
+            </block>
+        </reference>
+    </customer_account>
+    <!--  Become a Stylist Form   -->
+    <stylisthub_index_index>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">       
+            <block type="stylisthub/stylisthub" name="stylisthub_stylisthub">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/stylisthub.phtml</template>
+                </action>
+            </block>
+        </reference>
+    </stylisthub_index_index>
+    <!--    Become a Stylist Action    -->
+    <stylisthub_stylist_changebuyer>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">       
+            <block type="stylisthub/stylisthub" name="stylisthub_stylisthub">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/stylisthub.phtml</template>
+                </action>
+            </block> 
+        </reference>
+    </stylisthub_stylist_changebuyer>
+     <!--   Stylist Login Form    -->
+    <stylisthub_stylist_login>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">        
+            <block type="stylisthub/form_login" name="stylisthub_form_login">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/stylist/form/login.phtml</template>
+                </action>
+            </block>
+        </reference>
+    </stylisthub_stylist_login>
+    <!--   Stylist Registration Form    -->
+    <stylisthub_stylist_create>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">     
+            <block type="stylisthub/form_register" name="stylisthub_form_register">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/stylist/form/register.phtml</template>
+                </action>          
+                
+                <block type="wrapper" name="customer.form.register.fields.before" as="form_fields_before" translate="label">
+                    <label>Form Fields Before</label>
+                </block>
+            </block>
+        </reference>
+    </stylisthub_stylist_create>
+    <!--   Add New Product Form    -->
+    <stylisthub_product_new>         
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>                 
+            <action method="addItem">
+                <type>js_css</type>
+                <name>calendar/calendar-win2k-1.css</name>
+                <params></params>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar-setup.js</name>
+            </action>           
+            <block type="core/html_calendar" name="head.calendar" as="calendar" template="page/js/calendar.phtml"></block>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>        
+        <reference name="my.account.wrapper">           
+            <block type="stylisthub/product_new" name="stylisthub_productnew">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/product/new.phtml</template>
+                </action>
+            </block>
+        </reference>        
+    </stylisthub_product_new>
+    <!--   Manage Products   -->
+    <stylisthub_product_manage>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="root">
+            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">           
+            <block type="stylisthub/product_manage" name="stylisthub_productmanage">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/product/manage.phtml</template>
+                </action>
+            </block>       
+        </reference>
+    </stylisthub_product_manage>
+    <!--   Product Edit Form    -->
+    <stylisthub_product_edit>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>    
+            <action method="addItem">
+                <type>js_css</type>
+                <name>calendar/calendar-win2k-1.css</name>
+                <params></params>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar-setup.js</name>
+            </action>
+            <block type="core/html_calendar" name="head.calendar" as="calendar" template="page/js/calendar.phtml"></block>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">      
+            <block type="stylisthub/product_edit" name="stylisthub_productedit">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/product/edit.phtml</template>
+                </action>
+            </block> 
+        </reference>
+    </stylisthub_product_edit>
+    <!--   Manage Order    -->
+    <stylisthub_order_manage>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>    
+            <action method="addItem">
+                <type>js_css</type>
+                <name>calendar/calendar-win2k-1.css</name>
+                <params></params>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar-setup.js</name>
+            </action>
+            <block type="core/html_calendar" name="head.calendar" as="calendar" template="page/js/calendar.phtml"></block>
+        </reference>
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper"> 
+            <block type="core/html_calendar" name="head.calendar" as="calendar" template="page/js/calendar.phtml"/>                 
+            <block type="stylisthub/order_manage" name="stylisthub_ordermanage">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/order/manage.phtml</template>
+                </action>
+            </block>    
+        </reference>
+    </stylisthub_order_manage>
+    <!--   Add Profile Form    -->
+    <stylisthub_stylist_addprofile>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>            
+        </reference>        
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">          
+            <block type="stylisthub/addprofile" name="stylisthub_addprofile">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/addprofile.phtml</template>
+                </action>
+            </block>   
+        </reference>
+    </stylisthub_stylist_addprofile>
+    <!--   Display Stylist Form    --> 
+    <stylisthub_stylist_displaystylist>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="stylisthub/displaystylist" name="stylisthub_displaystylist">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/displaystylist.phtml</template>
+                </action>
+            </block>             
+        </reference>
+    </stylisthub_stylist_displaystylist>
+    <!--   Display Stylist Dashboard    -->
+    <stylisthub_stylist_dashboard>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>calendar/calendar-win2k-1.css</name>
+                <params></params>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar-setup.js</name>
+            </action>
+            <block type="core/html_calendar" name="head.calendar" as="calendar" template="page/js/calendar.phtml"></block>
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="stylisthub/dashboard" name="stylisthub_dashboard">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/dashboard.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_stylist_dashboard>
+    <!--   Display Stylist Profile link and Product Sold count in Product Detail Page   -->
+    <catalog_product_view>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>             
+        </reference>  
+        <reference name="product.info.extrahint">        
+            <block type="stylisthub/linkstylist" name="stylisthub_linkstylist" after="">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/linkstylist.phtml</template>
+                </action>
+            </block>
+            <block type="stylisthub/customer" name="stylisthub_customer"  template="stylisthub/customer.phtml"  ifconfig="stylisthub/stylisthub/activate" />
+        </reference> 
+          <!--   Display Compare price feature in product detail page--> 
+         <reference name="product.info">
+            <block type="stylisthub/compareprice" name="stylisthub_compareprice" after="media">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/compareprice.phtml</template>
+                </action>
+            </block>           
+        </reference>
+    </catalog_product_view>    
+   
+    <!--   Contact Admin Form    -->  
+    <stylisthub_contact_form>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>
+            <action method="setTitle">
+                <params><![CDATA[Contact Admin]]></params>
+            </action> 
+        </reference>
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">           
+            <block type="stylisthub/contact_form" name="stylisthub_contactform">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/contact/form.phtml</template>
+                </action>
+            </block>       
+        </reference>
+    </stylisthub_contact_form> 
+    <!--   Display Top Stylists    -->    
+    <stylisthub_stylist_topstylist>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>     
+        <reference name="content"> 
+            <block type="stylisthub/topstylist" name="stylisthub_topstylist">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/topstylist.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_stylist_topstylist>
+    <!--   Display All Stylists    -->
+    <stylisthub_stylist_allstylist>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>              
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>     
+        <reference name="content"> 
+            <block type="stylisthub/allstylist" name="stylisthub_allstylist">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/allstylist.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_stylist_allstylist>
+    <!--   View Order Information   -->
+    <stylisthub_order_vieworder>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper"> 
+            <block type="stylisthub/order_vieworder" name="stylisthub_vieworder">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/order/vieworder.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_order_vieworder>
+    <!--   View Transaction History    -->
+    <stylisthub_order_viewtransaction>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper"> 
+            <block type="stylisthub/order_viewtransaction" name="stylisthub_viewtransaction">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/order/viewtransaction.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_order_viewtransaction>
+    <!--   Display Category Links    -->
+    <stylisthub_stylist_categorylist>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-right.phtml</template>
+            </action>
+        </reference>
+      
+        <reference name="content"> 
+            <block type="stylisthub/categorylist" name="stylisthub_categorylist">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/categorylist.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_stylist_categorylist>
+     <!--   Display All Stylist Review   -->
+    <stylisthub_stylist_allreview>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+      
+        <reference name="content">
+            <block type="stylisthub/allreview" name="stylisthub_allreview">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/allreview.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_stylist_allreview>
+      <!--   Display All Customer Posted Reviews to Stylist   -->
+    <stylisthub_stylist_customerreview>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper"> 
+            <block type="stylisthub/customerreview" name="stylisthub_customerreview">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/customerreview.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_stylist_customerreview> 
+      <!--   Display Vacation Mode Form   -->
+    <stylisthub_stylist_vacationmode>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>calendar/calendar-win2k-1.css</name>
+                <params></params>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar-setup.js</name>
+            </action>
+            <block type="core/html_calendar" name="head.calendar" as="calendar" template="page/js/calendar.phtml"></block> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper"> 
+            <block type="stylisthub/vacationmode" name="stylisthub_vacationmode">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/vacationmode.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_stylist_vacationmode>
+      <!--   Display Home Page Products with Banner   --> 
+    <cms_index_index>
+        <reference name="head"> 
+            <action method="addCss">
+                <stylesheet>css/styles.css</stylesheet>
+            </action>          
+<!--            <action method="addCss">
+                <stylesheet>css/protoshow.css</stylesheet>
+            </action> -->
+<!--            <action method="addJs">
+                <script>prototype/prototype.js</script>
+            </action> 
+            <action method="addJs">
+                <script>scriptaculous/scriptaculous.js</script>
+            </action>            -->
+<!--            <action method="addItem">
+                <type>js</type>
+                <name>stylisthub/protoshow.js</name>
+            </action> -->
+            <action method="addItem">
+                <type>js</type>
+                <name>stylisthub/protofade.1.2.js</name>
+            </action>                             
+            <action method="addItem">
+                <type>js</type>
+                <name>stylisthub/carousel.js</name>
+            </action> 
+        </reference>
+        <reference name="top.menu" after="topMenu">
+            <block type="stylisthub/bannerslide" name="bannerslide">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>bannerslide/bannerslide.phtml</template>
+                </action>
+            </block>
+        </reference>
+        <reference name="content">
+            <block type="stylisthub/bannerslide" name="newpopular"> 
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>bannerslide/mostpopular.phtml</template>
+                </action>
+            </block>
+        </reference>
+        <reference name="topstylist">
+            <block type="stylisthub/topstylist" name="stylisthub_topstylist">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/topstylist.phtml</template>
+                </action>
+            </block>
+        </reference>
+    </cms_index_index>
+     <!--   Display Create Invoice Form  -->
+    <stylisthub_order_invoice>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper"> 
+            <block type="stylisthub/vieworder" name="stylisthub_vieworder">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/order/invoice.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_order_invoice> 
+     <!--   Manage Deal Products  -->
+    <stylisthub_product_managedeals>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper"> 
+            <block type="stylisthub/product_managedeals" name="stylisthub_managedeals">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/product/managedeals.phtml</template>
+                </action>
+            </block>            
+        </reference>
+    </stylisthub_product_managedeals> 
+     <!--   Display all the compare price stylist products    --> 
+    <stylisthub_product_comparestylistprice>
+        <reference name="head">          
+            <action method="addCss">
+                <stylesheet>stylisthub/stylisthub.css</stylesheet>
+            </action> 
+        </reference>  
+        <reference name="root">            
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="stylisthub/allcompareprice" name="stylisthub_allcompareprice">
+                <action method="setTemplate" ifconfig="stylisthub/stylisthub/activate">
+                    <template>stylisthub/allcompareprice.phtml</template>
+                </action>
+            </block>             
+        </reference>
+    </stylisthub_product_comparestylistprice>    
+</layout>   

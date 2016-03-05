@@ -1,0 +1,221 @@
+<?php
+/**
+ * SMD
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magemobiledesign.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * SMD does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * SMD does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    SMD
+ * @package     SMD_Stylisthub
+ * @version     1.2.3
+ * @author      SMD Team <support@magemobiledesign.com>
+ * @copyright   Copyright (c) 2014 SMD. (http://www.magemobiledesign.com)
+ * @license     http://www.magemobiledesign.com/LICENSE.txt
+ * 
+ */
+/**
+ * This file is used to compare stylist product price with others stylist products
+ */
+/**
+ * Getting current product id in registry
+ */
+$productId = $this->getRequest()->getParam('id');
+$productcollection = Mage::helper('stylisthub/stylisthub')->getProductInfo($productId);
+?>
+<div class="clear"></div>
+<div class="back_btn">
+    <a href="<?php echo $productcollection->getProductUrl(); ?>">« <?php echo $this->__('Back to Product Information'); ?></a>
+</div>
+
+<div class="product_wrapper">
+
+    <a href="<?php echo $productcollection->getProductUrl(); ?>"> <img src="<?php echo Mage::helper('catalog/image')->init($productcollection, 'image')->resize(200, 200); ?>" alt="" /></a>
+    <div class="product_info_wr"> <h1><a href="<?php echo $productcollection->getProductUrl(); ?>">        
+                <?php echo $productcollection->getName(); ?>     </a>
+        </h1>
+        <p><?php echo $productcollection->getDescription(); ?></p></div>
+</div>
+<?php
+/**
+ * Getting current date to check the special price 
+ */
+$currentDate = Mage::getModel('core/date')->date('Y-m-d');
+/**
+ * Product collection with 'compare_product_id' attribute filter
+ */
+$collection = $this->getCollection();
+$size = count($collection);
+if ($size > 0) {
+    ?>
+    <div class="compare_wrapper">
+        <div>
+            <h1><?php echo $this->__('More stylists selling this product'); ?></h1>
+            <div class="view_link"> <?php echo $this->__('Available Stylists ').$size; ?>
+            <?php 
+                 $minimumPrice = 1; 
+                 foreach ($collection as $_collection) { 
+					$price = $_collection->getPrice();
+					$spl_price = $_collection->getSpecialPrice();
+					$dealExpireDate = $_collection->getspecial_to_date();
+					if($minimumPrice==1){
+						if (!empty($spl_price) && ($dealExpireDate != '') && ($dealExpireDate >= $currentDate)) {							
+							echo $this->__('with minimum starting price is ').Mage::helper('core')->currency($spl_price, true, false);
+						} else {
+							echo $this->__('with minimum starting price is ').Mage::helper('core')->currency($price, true, false);
+						}
+					}
+					$minimumPrice++;
+				}
+					?>
+            </div>
+        </div>
+         <table class="data-table" id="compare_product">
+        <thead>
+            <tr>
+                <th width="20%"><?php echo $this->__('Stylist Information'); ?></th>
+                <th width="60%" class="product_info_title"><?php echo $this->__('Product Information'); ?></th>
+                <th width="10%" class="padding"><?php echo $this->__('Price'); ?></th>
+                <th width="10%"><?php echo $this->__('Cart'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <?php
+           
+            foreach ($collection as $_collection) {
+                /**
+                 * Getting stylist information using stylist id
+                 */
+             
+                    ?>
+                    <tr>
+                        <td>
+                            <h2> <?php
+                                $stylistId = $_collection->getStylistId();
+                                $stylistInfo = Mage::getModel('stylisthub/stylistprofile')->collectprofile($stylistId);                                
+                                $stylistUrl = Mage::getModel('stylisthub/stylistreview')->backUrl($stylistId);?>
+                                <a href="<?php echo $stylistUrl; ?>" title="<?php echo $stylistInfo['store_title']; ?>"> <?php echo $stylistInfo['store_title']; ?></a>
+                                <?php
+                                /**
+                                 * Getting stylist review information
+                                 */
+                                ?>
+                            </h2>
+                            <span class="all_review_container_wr">  
+                                <span class="all_reviews_details_wr"> 
+                                    <p class="all_reviews_block">
+                                        <?php
+                                        $ratingCollection = $this->averageRatings($stylistId);
+                                        if ($ratingCollection == 1) {
+                                            ?>
+                                            <label class="all_review_rating" style="width:20%;"></label>
+                                        <?php } elseif ($ratingCollection == 2) { ?>
+                                            <label class="all_review_rating" style="width:40%;"></label>
+                                        <?php } elseif ($ratingCollection == 3) { ?>
+                                            <label class="all_review_rating" style="width:60%;"></label>
+                                        <?php } elseif ($ratingCollection == 4) { ?>
+                                            <label class="all_review_rating" style="width:80%;"></label>
+                                         <?php } elseif($ratingCollection == 5) { ?>
+                                            <label class="all_review_rating" style="width:100%;"></label>
+                                        <?php } else {?>   
+                                         <label class="all_review_rating" style="width:0%;"></label>
+                                         <?php } ?>
+                                    </p>
+                                </span>
+
+                                <p class="feedback_text"> <?php
+                                    /**
+                                     * Getting stylist review information
+                                     */
+                                    $reviewCount = $this->getReviewsCount($stylistId);
+                                    if ($reviewCount > 0) {                                      
+                                        if ($reviewCount == 1) {
+                                            echo $reviewCount.$this->__(' Feedback');
+                                        } else {
+                                            echo $reviewCount.$this->__(' Feedbacks');
+                                        }
+                                    }
+                                    /**
+                                     * Getting stylist rating information
+                                     */
+                                    ?>
+                                </p>
+                            </span>
+                        </td>
+
+                        <?php
+                        /**
+                         * Display product information 
+                         */
+                        ?>
+                        <td class="product_image_compare">
+                            <a href="<?php echo $_collection->getProductUrl(); ?>">
+                                <img title="<?php echo $_collection->getName(); ?>" src="<?php echo Mage::helper('catalog/image')->init($_collection, 'image')->resize(100, 100); ?>" alt="" />  </a>
+                            <div> 
+                                <h2> 
+                                    <a href="<?php echo $_collection->getProductUrl(); ?>" title="<?php echo $_collection->getName(); ?>"> <?php echo $_collection->getName(); ?></a> 
+                                </h2>
+                                <p>
+                                    <?php
+                                     $productName = strip_tags($_collection->getShortDescription());
+                                    $lengthProductName = strlen($productName);
+                                    $subProductName = substr($productName, 0, 130);
+                                    if ($lengthProductName >= 130) {
+                                        $productNameFix = $subProductName . "...";
+                                    } else {
+                                        $productNameFix = $productName;
+                                    }
+                                    echo $productNameFix;
+                                    ?>
+                                </p>
+                            </div>
+                        </td>
+                        <td>
+                            <?php
+                            $price = $_collection->getPrice();
+                            $spl_price = $_collection->getSpecialPrice();
+                            $dealExpireDate = $_collection->getspecial_to_date();
+                            if (!empty($spl_price) && ($dealExpireDate != '') && ($dealExpireDate >= $currentDate)) {
+                                echo '<del>' . Mage::helper('core')->currency($price, true, false) . '</del>';
+                                echo Mage::helper('core')->currency($spl_price, true, false);
+                            } else {
+                                echo Mage::helper('core')->currency($price, true, false);
+                            }
+                            ?>  
+                        </td>  
+
+                        <td>
+            <?php if ($_collection->isSaleable()) { ?>
+                                <button type="button" title="Add to Cart" class="button btn-cart mp_addtocart_button" onclick="setLocation('<?php echo Mage::helper('checkout/cart')->getAddUrl($_collection); ?>');">
+                                    <span class="mp_addtocart"><?php echo $this->__('Add to Cart'); ?></span>
+                                </button>                                        
+                            <?php } else { ?>
+                                <p class="availability out-of-stock"></p>
+                        <?php } ?>
+                        </td>
+                  
+                </tr>
+                <?php
+            }
+            ?>
+
+        </tbody>
+        </table>
+    </div>
+    <?php echo $this->getPagerHtml();
+}
+?>

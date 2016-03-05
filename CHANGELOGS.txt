@@ -1,0 +1,22 @@
+SMD Multi Stylist Stylisthub Platform Magento Extnesion - CHANGE LOGS
+---------------------------------------------------------------------
+Legend
++ New feature
+- Fix bug
+
+v3.6	+ Compatible to Magento 1.9.1					23 Aug 2014
+v3.5	- Fix some minor bugs							13 May 2014
+v3.4	+ Convert to more C2C Multi Stylist				01 May 2014	
+v3.3	- Fix a bug on payment							22 Apr 2014
+v3.2	+ Add Next/back button							15 Apr 2014
+v3.1	- Minor bug fix for uploading banner			28 Mar 2014
+v3.0	+ Add stylist upload product and stylist store	27 Jan 2014
+
+v2.5    - Fix the tax issue		     					13 Aug 2013
+v2.4	- Fix one minor conflict 						10 Aug 2013
+v2.3	+ Add payment status for stylists				08 Aug 2013
+v2.2	- Fix the multi purchase bug					02 Aug 2013
+v2.1	- Fix the currency bug							31 Jul 2013
+v2.0	+ Add product commisssion						10 Jul 2013
+v1.1	- Fix a minor bug		 						7 Jul 2013
+v1.0	+ New Extension Release 						27 Mar 2013

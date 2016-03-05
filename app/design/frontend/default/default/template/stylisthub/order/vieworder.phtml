@@ -1,0 +1,184 @@
+<?php
+/**
+ * SMD
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magemobiledesign.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * SMD does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * SMD does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    SMD
+ * @package     SMD_Stylisthub
+ * @version     1.2.3
+ * @author      SMD Team <support@magemobiledesign.com>
+ * @copyright   Copyright (c) 2014 SMD. (http://www.magemobiledesign.com)
+ * @license     http://www.magemobiledesign.com/LICENSE.txt
+ * 
+ */
+/**
+ * This file is used to display the Order Details
+ */
+/**
+ * Get order id and order details
+ */
+$orderId = $this->getRequest()->getParam('orderid');
+$productId = $this->getRequest()->getParam('productid');
+$orderDetails = Mage::getModel('sales/order')->load($orderId);
+
+/**
+ * Display Order date
+ */
+$created_date = date('M j, Y', strtotime($orderDetails['created_at']));
+?>
+<div class="page-title stylists_store">
+    <h1><?php echo $this->__('Order Id #') . $orderDetails['increment_id'] . '-' . $orderDetails['status']; ?> </h1>
+</div>
+
+<?php
+/**
+ * Display shipping address
+ */
+?>
+<div class="col2-set order-info-box">
+    <div class="col-1">
+        <div class="box">
+            <div class="box-title">
+                <h2><?php echo $this->__('Customer Shipping Address'); ?> </h2>
+            </div>
+            <div class="box-content">
+                <?php
+                $addr_entity_id = $orderDetails['shipping_address_id'];
+                $shippingaddress = Mage::getModel('sales/order_address');
+                $shippingaddress->load($addr_entity_id);
+                $shipaddgetdat = $shippingaddress->getData();
+                if (!empty($shipaddgetdat)) {
+                    echo $shipaddgetdat['firstname'] . ' ' . $shipaddgetdat['lastname'] . '<br/>';
+                    echo $shipaddgetdat['street'] . '<br/>';
+                    echo $shipaddgetdat['city'] . ', ';
+                    echo $shipaddgetdat['postcode'] . '<br/>';
+                    echo $shipaddgetdat['region'] . '<br/>';
+                    echo 'T:' . ' ' . $shipaddgetdat['telephone'] . '<br/>';
+                } else {
+                    echo $this->__('Shipping Address Not Applicable');
+                }
+                /**
+                 * Display Shipping Method
+                 */
+                ?>          
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="box">
+            <div class="box-title">
+                <h2><?php echo $this->__('Shipping Method'); ?></h2>
+            </div>
+            <div class="box-content"><?php
+                if (isset($orderDetails['shipping_description'])) {
+                    echo $orderDetails['shipping_description'];
+                } else {
+                    echo $this->__('Shipping Method Not Applicable');
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+/**
+ * Display Billing Address
+ */
+?>
+<div class="col2-set order-info-box">
+    <div class="col-1">
+        <div class="box">
+            <div class="box-title">
+                <h2><?php echo $this->__('Customer Billing Address'); ?></h2>
+            </div>
+            <div class="box-content">
+                <?php
+                $biladdr_entity_id = $orderDetails['billing_address_id'];
+                $billingaddress = Mage::getModel('sales/order_address');
+                $billingaddress->load($biladdr_entity_id);
+                $billaddgetdat = $billingaddress->getData();
+                echo $billaddgetdat['firstname'] . ' ' . $billaddgetdat['lastname'] . '<br/>';
+                echo $billaddgetdat['street'] . '<br/>';
+                echo $billaddgetdat['city'] . ', ';
+                echo $billaddgetdat['postcode'] . '<br/>';
+                echo $billaddgetdat['region'] . '<br/>';
+                echo 'T:' . ' ' . $billaddgetdat['telephone'] . '<br/>';
+                ?>
+            </div>
+        </div>
+    </div>
+    <?php
+    /**
+     * Display Payment Method
+     */
+    ?>   
+    <div class="col-2">
+        <div class="box box-payment">
+            <div class="box-title">
+                <h2><?php echo $this->__('Payment Method'); ?></h2>
+            </div>
+            <div class="box-content">
+                <?php echo $orderDetails->getPayment()->getMethodInstance()->getTitle(); ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+/**
+ * Display Items Ordered
+ */
+?>  
+<h2><?php echo $this->__('Items Ordered'); ?></h2><p class="order-date"><?php echo $this->__('Order Date:') . $created_date; ?></p>
+<?php
+/**
+ * Display Product Order Information
+ */
+$order = $this->viewOrder($orderId);
+?>  
+
+<table class="data-table" id="my-orders-table" summary="<?php echo $this->__('Items Ordered') ?>">    
+    <thead>
+        <tr>
+            <th><?php echo $this->__('Product Name') ?></th>    
+            <th class="a-center"><?php echo $this->__('Qty') ?></th>
+            <th class="a-center"><?php echo $this->__('Price') ?></th> 
+            <th class="a-center"><?php echo $this->__('Stylist Amount') ?></th>
+            <th class="a-center"><?php echo $this->__('Status') ?></th>
+        </tr>
+    </thead>            
+    <tbody>  
+        <?php
+        foreach ($order as $orders) {
+            $orderDetails = Mage::getModel('sales/order')->load($orders->getOrderId());
+        }
+        $item = Mage::getModel('catalog/product')->load($productId);
+        ?>
+        <tr>
+            <td><?php echo $item->getName(); ?></td>
+            <td class="a-center"><?php echo $orders->getProductQty() ?></td>
+            <td class="a-center"><?php echo Mage::helper('core')->currency($orders->getProductAmt(), true, false); ?></td>
+            <td class="a-center"><?php echo Mage::helper('core')->currency($orders->getStylistAmount(), true, false); ?></td>
+            <td class="a-center"><?php echo $orderDetails->getStatus(); ?></td>                
+        </tr>  
+    </tbody>        
+    <tfoot>
+        <?php echo $this->getChildHtml('order_totals') ?>
+    </tfoot>
+</table>
+<div class="buttons-set mp_view_order_back"><a href="<?php echo Mage::helper('stylisthub/stylisthub')->getManageOrderUrl(); ?>"><small><< </small><?php echo $this->__('Back to Orders'); ?> </a></div>
